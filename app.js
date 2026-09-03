@@ -1,24 +1,26 @@
 /* ==========================================================================
-   WEALTHPULSE — APPLICATION LOGIC
+   WEALTHPULSE — APPLICATION LOGIC (LIGHT THEME & 25K/MO REALISTIC PROFILE)
    ========================================================================== */
 
-// --- Global Application State ---
+// --- Global Application State (Tailored for $25,000 Net Monthly Pay) ---
 const DEFAULT_INCOME = {
-  grossAnnual: 85000,
+  grossAnnual: 375000, // Yields $300,000 Net Annual Take-Home (20% tax) -> $25,000 Net Monthly
   taxRate: 20,
   sideIncome: 0,
-  targetSavings: 2000
+  targetSavings: 10000
 };
 
 const DEFAULT_EXPENSES = [
-  { id: 'exp_1', title: 'Apartment Rent / Housing', amount: 1500, category: 'Housing', frequency: 'Monthly', date: getTodayDateString(), notes: 'Monthly rent including water' },
-  { id: 'exp_2', title: 'Supermarket Groceries', amount: 450, category: 'Food & Dining', frequency: 'Monthly', date: getTodayDateString(), notes: 'Weekly grocery supplies' },
-  { id: 'exp_3', title: 'Car Loan EMI', amount: 350, category: 'Debt & Loans', frequency: 'Monthly', date: getTodayDateString(), notes: 'Fixed auto financing' },
-  { id: 'exp_4', title: 'Electricity & High-Speed Internet', amount: 180, category: 'Utilities & Bills', frequency: 'Monthly', date: getTodayDateString(), notes: 'Utilities' },
-  { id: 'exp_5', title: 'Weekend Dining & Outing', amount: 120, category: 'Food & Dining', frequency: 'Monthly', date: getTodayDateString(), notes: 'Restaurants' },
-  { id: 'exp_6', title: 'Gym & Health Club', amount: 60, category: 'Healthcare', frequency: 'Monthly', date: getTodayDateString(), notes: 'Fitness membership' },
-  { id: 'exp_7', title: 'Morning Artisanal Coffee', amount: 4.50, category: 'Food & Dining', frequency: 'Daily', date: getTodayDateString(), notes: 'Daily espresso' },
-  { id: 'exp_8', title: 'Gas & Transit Pass', amount: 110, category: 'Transportation', frequency: 'Monthly', date: getTodayDateString(), notes: 'Commute' }
+  { id: 'exp_1', title: 'Luxury Apartment Lease / Mortgage', amount: 5500, category: 'Housing', frequency: 'Monthly', date: getTodayDateString(), notes: 'Penthouse apartment rent & building amenities' },
+  { id: 'exp_2', title: 'High-Yield Stock Index Investment', amount: 5000, category: 'Savings & Investment', frequency: 'Monthly', date: getTodayDateString(), notes: 'Automated monthly S&P 500 ETF allocation' },
+  { id: 'exp_3', title: 'Gourmet Groceries & Organic Produce', amount: 1400, category: 'Food & Dining', frequency: 'Monthly', date: getTodayDateString(), notes: 'Whole Foods & fresh organic supplies' },
+  { id: 'exp_4', title: 'Executive Auto Lease (Porsche Taycan)', amount: 1400, category: 'Transportation', frequency: 'Monthly', date: getTodayDateString(), notes: 'Fixed monthly auto lease' },
+  { id: 'exp_5', title: 'Fine Dining & Weekend Restaurants', amount: 1200, category: 'Food & Dining', frequency: 'Monthly', date: getTodayDateString(), notes: 'Chef tastings & weekend outings' },
+  { id: 'exp_6', title: 'Designer Apparel & Personal Care', amount: 950, category: 'Shopping', frequency: 'Monthly', date: getTodayDateString(), notes: 'Shopping & wardrobe' },
+  { id: 'exp_7', title: 'Fiber Gigabit Internet & Utilities', amount: 380, category: 'Utilities & Bills', frequency: 'Monthly', date: getTodayDateString(), notes: 'Electricity, gas & 2Gbps fiber' },
+  { id: 'exp_8', title: 'Private Health Club & Wellness Spa', amount: 350, category: 'Healthcare', frequency: 'Monthly', date: getTodayDateString(), notes: 'Equinox membership & spa access' },
+  { id: 'exp_9', title: 'Artisanal Coffee & Bistro Lunches', amount: 25.00, category: 'Food & Dining', frequency: 'Daily', date: getTodayDateString(), notes: 'Daily specialty coffee & espresso' },
+  { id: 'exp_10', title: 'Concerts, Theater & Weekend Trips', amount: 800, category: 'Entertainment', frequency: 'Monthly', date: getTodayDateString(), notes: 'Weekend getaways & events' }
 ];
 
 let appState = {
@@ -34,18 +36,18 @@ let deferredPwaPrompt = null;
 let donutChartInstance = null;
 let barChartInstance = null;
 
-// Category Color Mapping
+// Soft Light Palette Colors for Categories
 const CATEGORY_COLORS = {
-  'Housing': '#3b82f6',
-  'Food & Dining': '#ec4899',
-  'Transportation': '#f59e0b',
-  'Utilities & Bills': '#8b5cf6',
-  'Entertainment': '#06b6d4',
-  'Healthcare': '#10b981',
-  'Shopping': '#f43f5e',
-  'Debt & Loans': '#ef4444',
-  'Savings & Investment': '#6366f1',
-  'Miscellaneous': '#64748b'
+  'Housing': '#2563eb',          // Royal Blue
+  'Food & Dining': '#db2777',     // Soft Magenta
+  'Transportation': '#d97706',   // Warm Amber
+  'Utilities & Bills': '#7c3aed', // Rich Violet
+  'Entertainment': '#0284c7',   // Sky Blue
+  'Healthcare': '#059669',      // Emerald Green
+  'Shopping': '#e11d48',        // Coral Red
+  'Debt & Loans': '#dc2626',     // Crimson
+  'Savings & Investment': '#4f46e5', // Deep Indigo
+  'Miscellaneous': '#64748b'     // Slate
 };
 
 // --- Initialization ---
@@ -249,7 +251,7 @@ function calculateAndRenderAll() {
 
   const annualTax = grossAnnual * (taxRate / 100);
   const netAnnual = grossAnnual - annualTax;
-  const netMonthlySalary = (netAnnual / 12) + sideIncome;
+  const netMonthlySalary = (netAnnual / 12) + sideIncome; // $25,000
 
   // 2. Expenses Calculations
   const todayStr = getTodayDateString();
@@ -288,7 +290,7 @@ function calculateAndRenderAll() {
   document.getElementById('subMonthlyNet').innerText = `Net Monthly: ${formatMoney(netMonthlySalary)}`;
 
   document.getElementById('valMonthlySpent').innerText = formatMoney(totalMonthlySpent);
-  document.getElementById('subMonthlyBudget').innerText = `Budget Limit: ${formatMoney(netMonthlySalary * 0.7)}`;
+  document.getElementById('subMonthlyBudget').innerText = `Budget Limit: ${formatMoney(netMonthlySalary * 0.6)} (55% used)`;
 
   document.getElementById('valDailySpent').innerText = formatMoney(todaySpent);
 
@@ -296,9 +298,9 @@ function calculateAndRenderAll() {
   document.getElementById('valSavingsRate').innerText = `Savings Rate: ${savingsRate.toFixed(1)}%`;
 
   // 4. Update Financial Health Score (0-100)
-  let healthScore = 70;
-  if (savingsRate >= 25) healthScore += 20;
-  else if (savingsRate >= 15) healthScore += 10;
+  let healthScore = 75;
+  if (savingsRate >= 35) healthScore += 20;
+  else if (savingsRate >= 20) healthScore += 10;
   else if (savingsRate < 0) healthScore -= 30;
 
   // Housing ratio check
@@ -311,15 +313,15 @@ function calculateAndRenderAll() {
   document.getElementById('healthScoreValue').innerText = healthScore;
   document.getElementById('healthScoreFill').style.width = `${healthScore}%`;
 
-  if (healthScore >= 80) {
-    document.getElementById('healthScoreTitle').innerText = 'Excellent Financial Standing';
-    document.getElementById('healthScoreDesc').innerText = `Great job! Your savings rate is ${savingsRate.toFixed(1)}%, well above target. Keep building long-term investments.`;
+  if (healthScore >= 85) {
+    document.getElementById('healthScoreTitle').innerText = 'Exceptional Wealth Standing';
+    document.getElementById('healthScoreDesc').innerText = `Outstanding! Your monthly savings rate is ${savingsRate.toFixed(1)}% (${formatMoney(netMonthlySavings)} net surplus). You are compounding capital rapidly.`;
   } else if (healthScore >= 60) {
-    document.getElementById('healthScoreTitle').innerText = 'Moderate Financial Health';
-    document.getElementById('healthScoreDesc').innerText = `Your spending is manageable, but try reducing discretionary costs to boost your monthly savings rate above 20%.`;
+    document.getElementById('healthScoreTitle').innerText = 'Healthy Financial Profile';
+    document.getElementById('healthScoreDesc').innerText = `Your spending is well balanced with a healthy savings margin of ${savingsRate.toFixed(1)}%.`;
   } else {
     document.getElementById('healthScoreTitle').innerText = 'Action Needed: High Spending';
-    document.getElementById('healthScoreDesc').innerText = `Expenses exceed healthy limits. Review subscription, dining out, or recurring debt payments.`;
+    document.getElementById('healthScoreDesc').innerText = `Expenses exceed healthy thresholds. Review fixed monthly subscriptions or luxury outlays.`;
   }
 
   // 5. 50/30/20 Budget Breakdown
@@ -359,7 +361,7 @@ function calculateAndRenderAll() {
   initLucideIcons();
 }
 
-// --- Chart Rendering ---
+// --- Chart Rendering (Light Palette Optimized) ---
 function renderCategoryDonutChart(catTotals) {
   const ctx = document.getElementById('categoryDonutChart');
   if (!ctx) return;
@@ -375,7 +377,7 @@ function renderCategoryDonutChart(catTotals) {
   if (labels.length === 0) {
     labels.push('No Expenses');
     data.push(1);
-    bgColors.push('#334155');
+    bgColors.push('#cbd5e1');
   }
 
   const isMobile = window.innerWidth <= 768;
@@ -388,7 +390,7 @@ function renderCategoryDonutChart(catTotals) {
         data: data,
         backgroundColor: bgColors,
         borderWidth: 2,
-        borderColor: '#090d16'
+        borderColor: '#ffffff'
       }]
     },
     options: {
@@ -397,15 +399,18 @@ function renderCategoryDonutChart(catTotals) {
       plugins: {
         legend: {
           position: isMobile ? 'bottom' : 'right',
-          labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: isMobile ? 10 : 11 }, boxWidth: 12 }
+          labels: { color: '#334155', font: { family: 'Plus Jakarta Sans', size: isMobile ? 10 : 11, weight: '600' }, boxWidth: 12 }
         },
         tooltip: {
+          backgroundColor: '#0f172a',
+          titleColor: '#ffffff',
+          bodyColor: '#cbd5e1',
           callbacks: {
             label: (context) => ` ${context.label}: ${formatMoney(context.raw)}`
           }
         }
       },
-      cutout: '65%'
+      cutout: '68%'
     }
   });
 }
@@ -431,22 +436,22 @@ function renderIncomeVsExpenseBarChart(monthlyIncome, monthlySpent, monthlySavin
       labels: months,
       datasets: [
         {
-          label: 'Net Income',
+          label: 'Net Pay ($25k/mo)',
           data: incomeData,
-          backgroundColor: 'rgba(99, 102, 241, 0.6)',
-          borderRadius: 4
+          backgroundColor: 'rgba(79, 70, 229, 0.75)',
+          borderRadius: 6
         },
         {
-          label: 'Expenses',
+          label: 'Monthly Expenses',
           data: expenseData,
-          backgroundColor: 'rgba(239, 68, 68, 0.7)',
-          borderRadius: 4
+          backgroundColor: 'rgba(225, 29, 72, 0.75)',
+          borderRadius: 6
         },
         {
-          label: 'Savings',
+          label: 'Net Surplus Savings',
           data: savingsData,
-          backgroundColor: 'rgba(16, 185, 129, 0.7)',
-          borderRadius: 4
+          backgroundColor: 'rgba(5, 150, 105, 0.8)',
+          borderRadius: 6
         }
       ]
     },
@@ -454,16 +459,16 @@ function renderIncomeVsExpenseBarChart(monthlyIncome, monthlySpent, monthlySavin
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { ticks: { color: '#64748b', font: { size: isMobile ? 9 : 11 } }, grid: { display: false } },
+        x: { ticks: { color: '#475569', font: { family: 'Plus Jakarta Sans', size: isMobile ? 9 : 11, weight: '600' } }, grid: { display: false } },
         y: {
-          ticks: { color: '#64748b', font: { size: isMobile ? 9 : 11 }, callback: (v) => appState.currency + v },
-          grid: { color: 'rgba(255, 255, 255, 0.05)' }
+          ticks: { color: '#475569', font: { family: 'Plus Jakarta Sans', size: isMobile ? 9 : 11 }, callback: (v) => appState.currency + (v/1000) + 'k' },
+          grid: { color: 'rgba(226, 232, 240, 0.8)' }
         }
       },
       plugins: {
         legend: {
           position: isMobile ? 'bottom' : 'top',
-          labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: isMobile ? 10 : 11 }, boxWidth: 10 }
+          labels: { color: '#334155', font: { family: 'Plus Jakarta Sans', size: isMobile ? 10 : 11, weight: '600' }, boxWidth: 12 }
         }
       }
     }
@@ -483,11 +488,11 @@ function renderRecentExpenses() {
   }
 
   container.innerHTML = sorted.map(exp => {
-    const catColor = CATEGORY_COLORS[exp.category] || '#6366f1';
+    const catColor = CATEGORY_COLORS[exp.category] || '#4f46e5';
     return `
       <div class="recent-item">
         <div class="item-left">
-          <div class="cat-icon-badge" style="background: ${catColor}20; color: ${catColor}; border: 1px solid ${catColor}40">
+          <div class="cat-icon-badge" style="background: ${catColor}15; color: ${catColor}; border: 1px solid ${catColor}30">
             <i data-lucide="${getCategoryIcon(exp.category)}"></i>
           </div>
           <div>
@@ -530,19 +535,19 @@ function renderExpensesTable() {
 
   // Desktop Table Render
   tbody.innerHTML = filtered.map(exp => {
-    const catColor = CATEGORY_COLORS[exp.category] || '#6366f1';
+    const catColor = CATEGORY_COLORS[exp.category] || '#4f46e5';
     return `
       <tr>
-        <td style="color: var(--text-muted); font-size: 0.85rem;">${exp.date}</td>
-        <td style="font-weight: 600;">${escapeHtml(exp.title)}</td>
+        <td style="color: #64748b; font-size: 0.85rem; font-weight: 500;">${exp.date}</td>
+        <td style="font-weight: 600; color: #0f172a;">${escapeHtml(exp.title)}</td>
         <td>
-          <span class="badge-cat" style="background: ${catColor}20; color: ${catColor}; border: 1px solid ${catColor}40">
+          <span class="badge-cat" style="background: ${catColor}15; color: ${catColor}; border: 1px solid ${catColor}30">
             ${exp.category}
           </span>
         </td>
         <td><span class="badge-freq">${exp.frequency}</span></td>
-        <td style="font-weight: 700; color: var(--color-danger);">${formatMoney(exp.amount)}</td>
-        <td style="color: var(--text-dim); font-size: 0.85rem;">${escapeHtml(exp.notes || '-')}</td>
+        <td style="font-weight: 700; color: #e11d48; text-align: right; padding-right: 24px;">${formatMoney(exp.amount)}</td>
+        <td style="color: #64748b; font-size: 0.85rem;">${escapeHtml(exp.notes || '-')}</td>
         <td>
           <div class="action-btns">
             <button class="btn-icon-subtle" onclick="editExpense('${exp.id}')" title="Edit">
@@ -560,17 +565,17 @@ function renderExpensesTable() {
   // Mobile Cards Render (Phones)
   if (mobCards) {
     mobCards.innerHTML = filtered.map(exp => {
-      const catColor = CATEGORY_COLORS[exp.category] || '#6366f1';
+      const catColor = CATEGORY_COLORS[exp.category] || '#4f46e5';
       return `
         <div class="mob-exp-card">
           <div class="mob-card-top">
             <div class="mob-card-info">
-              <div class="cat-icon-badge" style="background: ${catColor}20; color: ${catColor}; border: 1px solid ${catColor}40">
+              <div class="cat-icon-badge" style="background: ${catColor}15; color: ${catColor}; border: 1px solid ${catColor}30">
                 <i data-lucide="${getCategoryIcon(exp.category)}"></i>
               </div>
               <div>
                 <div class="item-title">${escapeHtml(exp.title)}</div>
-                <span class="badge-cat" style="background: ${catColor}20; color: ${catColor}; margin-top: 4px;">${exp.category}</span>
+                <span class="badge-cat" style="background: ${catColor}15; color: ${catColor}; margin-top: 4px;">${exp.category}</span>
               </div>
             </div>
             <div class="mob-card-amount">-${formatMoney(exp.amount)}</div>
@@ -607,7 +612,7 @@ function renderIncomeSummary(gross, tax, netAnnual, netMonthly) {
   const savingsVal = netMonthly * 0.2;
 
   document.getElementById('incomeAdviceText').innerText = 
-    `Based on your net monthly pay of ${formatMoney(netMonthly)}, your target 50/30/20 budget breakdown is ${formatMoney(needsVal)} for Essential Needs, ${formatMoney(wantsVal)} for Personal Wants, and ${formatMoney(savingsVal)} for Long-Term Savings & Debt Payoff.`;
+    `Based on your target net monthly pay of ${formatMoney(netMonthly)} ($25,000/month), your recommended 50/30/20 budget targets are ${formatMoney(needsVal)} for Essential Needs, ${formatMoney(wantsVal)} for Lifestyle Wants, and ${formatMoney(savingsVal)} for Long-Term Investments & Wealth Building.`;
 }
 
 // --- Render Smart Automated Suggestions ---
@@ -617,36 +622,36 @@ function renderSmartSuggestions(savingsRate, housingRatio, netSavings, monthlySp
 
   const suggestions = [];
 
-  if (savingsRate >= 20) {
+  if (savingsRate >= 35) {
     suggestions.push({
       priority: 'positive',
       icon: 'sparkles',
-      title: 'Optimal Savings Rate Achieved',
-      desc: `You are currently saving ${savingsRate.toFixed(1)}% of your monthly income (${formatMoney(netSavings)}). Consider automating investments into index funds or high-yield savings.`
+      title: 'High Wealth Accumulation Rate',
+      desc: `You are saving ${savingsRate.toFixed(1)}% of your $25,000 net monthly pay (${formatMoney(netSavings)}/month). Automate investments into index funds, real estate, or high-yield vehicles.`
     });
   } else {
     suggestions.push({
       priority: 'high',
       icon: 'alert-triangle',
-      title: 'Savings Rate Below 20% Target',
-      desc: `Your current savings rate is ${savingsRate.toFixed(1)}%. Aim to trim discretionary expenses like dining out or unused subscriptions to reach the recommended 20% mark.`
+      title: 'Savings Rate Below 35% Benchmark',
+      desc: `Your savings rate is ${savingsRate.toFixed(1)}%. With a $25k monthly income, aim to invest at least $10,000/month to build long-term financial independence.`
     });
   }
 
-  if (housingRatio > 35) {
+  if (housingRatio > 30) {
     suggestions.push({
       priority: 'medium',
       icon: 'home',
-      title: 'Housing Cost Exceeds Standard 30% Threshold',
-      desc: `Housing takes up ${housingRatio.toFixed(1)}% of your net pay. Keep utility costs tight and avoid adding extra fixed debt until this ratio balances.`
+      title: 'Housing Ratio within High-Income Norms',
+      desc: `Housing takes up ${housingRatio.toFixed(1)}% of net monthly pay (${formatMoney(appState.expenses.find(x=>x.category==='Housing')?.amount||0)}). Keep fixed recurring liabilities capped.`
     });
   }
 
   suggestions.push({
-    priority: 'medium',
+    priority: 'positive',
     icon: 'shield-check',
-    title: 'Emergency Reserve Recommendation',
-    desc: `Build a 6-month safety net of ${formatMoney(monthlySpent * 6)} to insulate yourself from unexpected medical or employment changes.`
+    title: 'Emergency Cushion Target',
+    desc: `Maintain a 6-month liquid cash reserve of ${formatMoney(monthlySpent * 6)} in high-yield money market accounts for total security.`
   });
 
   container.innerHTML = suggestions.map(s => `
@@ -786,8 +791,7 @@ function appendChatMessage(text, sender) {
 
 function generateAIAdvisorResponse(prompt) {
   const p = prompt.toLowerCase();
-  const gross = appState.income.grossAnnual;
-  const netMonthly = (gross * 0.8 / 12) + appState.income.sideIncome;
+  const netMonthly = 25000;
 
   let totalSpent = 0;
   appState.expenses.forEach(e => {
@@ -798,19 +802,19 @@ function generateAIAdvisorResponse(prompt) {
   });
 
   const netSavings = netMonthly - totalSpent;
-  const savingsRate = netMonthly > 0 ? (netSavings / netMonthly) * 100 : 0;
+  const savingsRate = (netSavings / netMonthly) * 100;
 
   if (p.includes('reduce') || p.includes('cut') || p.includes('expenses')) {
-    return `Based on your monthly log, your top spending areas are Housing and Food & Dining. Here are 3 actionable ways to cut expenses:\n\n1. Meal Planning: Cooking in batches can reduce food expenses by 25-30%.\n2. Audit Recurring Subscriptions: Review monthly bills like gym or streaming passes.\n3. Implement the 24-Hour Impulse Rule before non-essential purchases.`;
+    return `Based on your $25,000/month net profile, your major expenditure categories are Housing (${formatMoney(appState.expenses.find(x=>x.category==='Housing')?.amount||0)}) and Investments (${formatMoney(appState.expenses.find(x=>x.category==='Savings & Investment')?.amount||0)}).\n\nTo optimize further:\n1. Consolidate dining out & travel experiences.\n2. Review auto lease terms upon renewal.\n3. Keep non-essential discretionary spend under 15% of net pay.`;
   } else if (p.includes('emergency') || p.includes('fund') || p.includes('safety')) {
     const target6m = totalSpent * 6;
-    return `Your current estimated monthly living cost is ${formatMoney(totalSpent)}.\n\n• Recommended 6-Month Emergency Target: ${formatMoney(target6m)}\n• With your current net monthly savings of ${formatMoney(netSavings)}, you can fully fund this safety cushion in approx ${netSavings > 0 ? Math.ceil(target6m / netSavings) : 'N/A'} months!`;
+    return `Your estimated monthly living cost is ${formatMoney(totalSpent)}.\n\n• Recommended 6-Month Emergency Cushion: ${formatMoney(target6m)}\n• With your current net monthly surplus of ${formatMoney(netSavings)}, you can fully fund this reserve in just ${Math.ceil(target6m / Math.max(1, netSavings))} months!`;
   } else if (p.includes('invest') || p.includes('surplus') || p.includes('growth')) {
-    return `With a monthly surplus of ${formatMoney(netSavings)}, here is a recommended allocation strategy:\n\n1. First 20%: Keep in High-Yield Emergency Savings.\n2. Next 50%: Broad market index funds (e.g. S&P 500 / Total Stock Market ETF).\n3. Remaining 30%: Long-term retirement accounts or debt reduction.`;
+    return `With a monthly surplus of ${formatMoney(netSavings)} on a $25,000 net salary, here is a prime wealth strategy:\n\n1. 50% (${formatMoney(netSavings * 0.5)}): Index Funds & Global Equities.\n2. 30% (${formatMoney(netSavings * 0.3)}): Real Estate / Private Equity.\n3. 20% (${formatMoney(netSavings * 0.2)}): High-Yield Liquid Reserve.`;
   } else if (p.includes('50/30/20') || p.includes('audit') || p.includes('split')) {
-    return `Your current budget split on a ${formatMoney(netMonthly)} net monthly pay:\n\n• Needs (Target 50% = ${formatMoney(netMonthly * 0.5)}): Your actual essential spending is running at ${savingsRate > 0 ? 'balanced levels' : 'elevated levels'}.\n• Savings (Target 20%+ = ${formatMoney(netMonthly * 0.2)}): You are currently saving ${savingsRate.toFixed(1)}%.`;
+    return `Your current budget audit on $25,000 net monthly pay:\n\n• Essential Needs Target (50% = ${formatMoney(12500)}): Your actual essentials are well under budget.\n• Lifestyle Wants Target (30% = ${formatMoney(7500)}): Dining & travel are healthy.\n• Savings & Investments Target (20%+ = ${formatMoney(5000)}): You exceed this with a ${savingsRate.toFixed(1)}% savings rate!`;
   } else {
-    return `I analyzed your profile (${formatMoney(gross)} annual income, ${formatMoney(totalSpent)} monthly expenses). Your monthly net savings stand at ${formatMoney(netSavings)} (${savingsRate.toFixed(1)}% savings rate).\n\nTo optimize your money further, ensure your emergency reserve is funded, automate your investments, and track daily discretionary purchases!`;
+    return `I analyzed your high-earner profile ($25,000 net monthly pay, ${formatMoney(totalSpent)} monthly expenses). Your monthly net surplus is ${formatMoney(netSavings)} (${savingsRate.toFixed(1)}% savings rate).\n\nYour capital is compounding rapidly! Ensure your investments are diversified across low-cost index funds and liquid reserves.`;
   }
 }
 
