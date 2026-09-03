@@ -27,6 +27,9 @@ let appState = {
   expenses: [...DEFAULT_EXPENSES]
 };
 
+// PWA Deferred Prompt
+let deferredPwaPrompt = null;
+
 // Chart References
 let donutChartInstance = null;
 let barChartInstance = null;
@@ -50,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadStateFromLocalStorage();
   initLucideIcons();
   setupEventListeners();
+  setupPwaListeners();
   calculateAndRenderAll();
 });
 
@@ -89,6 +93,58 @@ function formatMoney(amount) {
     maximumFractionDigits: 2
   });
   return (amount < 0 ? '-' : '') + symbol + formatted;
+}
+
+// --- PWA Installation Logic ---
+function setupPwaListeners() {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+    const nativeBox = document.getElementById('pwaNativeInstallBox');
+    if (nativeBox) nativeBox.style.display = 'block';
+  });
+
+  const triggerBtn = document.getElementById('btnTriggerPwaNative');
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', async () => {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        const choiceResult = await deferredPwaPrompt.userChoice;
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the PWA install prompt');
+        }
+        deferredPwaPrompt = null;
+        closePwaModal();
+      }
+    });
+  }
+
+  const installBtns = ['btnInstallPwaSidebar', 'btnInstallPwaHeader', 'btnInstallPwaMobile'];
+  installBtns.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', openPwaModal);
+  });
+}
+
+function openPwaModal() {
+  const modal = document.getElementById('pwaInstallModal');
+  const nativeBox = document.getElementById('pwaNativeInstallBox');
+  const iosBox = document.getElementById('pwaIosInstallBox');
+  const androidBox = document.getElementById('pwaAndroidBox');
+
+  const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  if (nativeBox) nativeBox.style.display = deferredPwaPrompt ? 'block' : 'none';
+  if (iosBox) iosBox.style.display = isIos ? 'block' : 'none';
+  if (androidBox) androidBox.style.display = (!isIos && !deferredPwaPrompt) ? 'block' : 'none';
+
+  if (modal) modal.classList.remove('hidden');
+  initLucideIcons();
+}
+
+function closePwaModal() {
+  const modal = document.getElementById('pwaInstallModal');
+  if (modal) modal.classList.add('hidden');
 }
 
 // --- Event Listeners ---

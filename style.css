@@ -176,9 +176,48 @@ body {
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   border-top: 1px solid var(--border-glass);
   padding-top: 16px;
+}
+
+.btn-install-app {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border: 1px solid var(--color-success);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+}
+
+.btn-install-app:hover {
+  background: linear-gradient(135deg, var(--color-success), var(--color-primary));
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-install-mobile {
+  background: linear-gradient(135deg, var(--color-success), var(--color-primary));
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
 }
 
 .currency-selector-box {
@@ -974,6 +1013,74 @@ body {
   opacity: 0.5;
 }
 
+/* PWA Install Modal Styling */
+.pwa-modal-card {
+  max-width: 480px;
+}
+
+.pwa-badge-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(16, 185, 129, 0.15));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.pwa-hero-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-success));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.pwa-badge-hero h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.pwa-badge-hero p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.pwa-steps {
+  margin: 12px 0 16px 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.pwa-steps i {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  color: var(--color-primary);
+}
+
+.pwa-ios-box, .pwa-android-box, .pwa-native-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.pwa-ios-box h5, .pwa-android-box h5 {
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
 /* Forms & Grids */
 .grid-2col {
   display: grid;
@@ -1490,10 +1597,7 @@ body {
   display: none;
 }
 
-/* ==========================================================================
-   RESPONSIVE MEDIA QUERIES (PHONES & TABLETS)
-   ========================================================================== */
-
+/* Responsive Media Queries */
 @media (max-width: 900px) {
   .sidebar {
     display: none;
@@ -1525,7 +1629,6 @@ body {
     margin-bottom: 20px;
   }
 
-  /* Stacked Grids for Mobile */
   .charts-grid,
   .dashboard-bottom-grid,
   .grid-2col,

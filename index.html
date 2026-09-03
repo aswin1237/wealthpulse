@@ -66,6 +66,11 @@
       </nav>
 
       <div class="sidebar-footer">
+        <button class="btn btn-install-app" id="btnInstallPwaSidebar">
+          <i data-lucide="download-cloud"></i>
+          <span>Install Mobile App</span>
+        </button>
+
         <div class="currency-selector-box">
           <label for="currencySelect"><i data-lucide="coins"></i> Currency</label>
           <select id="currencySelect">
@@ -99,6 +104,9 @@
             <h2>WealthPulse</h2>
           </div>
           <div class="mobile-header-actions">
+            <button class="btn btn-install-mobile" id="btnInstallPwaMobile">
+              <i data-lucide="smartphone"></i> Install App
+            </button>
             <select id="currencySelectMobile" class="currency-select-mobile">
               <option value="$" selected>$ USD</option>
               <option value="₹">₹ INR</option>
@@ -120,6 +128,9 @@
         </div>
         
         <div class="header-actions desktop-only">
+          <button class="btn btn-install-app" id="btnInstallPwaHeader">
+            <i data-lucide="smartphone"></i> Install App
+          </button>
           <button class="btn btn-secondary" id="btnExportData">
             <i data-lucide="download"></i> Export Data
           </button>
@@ -715,6 +726,52 @@
           <button type="submit" class="btn btn-primary">Save Expense</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- PWA INSTALL INSTRUCTIONS MODAL (FOR IOS & MANUAL INSTALL) -->
+  <div id="pwaInstallModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel pwa-modal-card">
+      <div class="modal-header">
+        <h3><i data-lucide="smartphone"></i> Install WealthPulse App</h3>
+        <button class="btn-close" onclick="closePwaModal()">&times;</button>
+      </div>
+      <div class="pwa-instructions-body">
+        <div class="pwa-badge-hero">
+          <div class="pwa-hero-icon"><i data-lucide="wallet-cards"></i></div>
+          <div>
+            <h4>WealthPulse PWA</h4>
+            <p>Install on your home screen for quick offline access!</p>
+          </div>
+        </div>
+
+        <div id="pwaNativeInstallBox" class="pwa-native-box">
+          <p>Tap below to trigger instant mobile app installation:</p>
+          <button class="btn btn-primary btn-full-mobile" id="btnTriggerPwaNative">
+            <i data-lucide="download-cloud"></i> Install App Now
+          </button>
+        </div>
+
+        <div id="pwaIosInstallBox" class="pwa-ios-box">
+          <h5><i data-lucide="apple"></i> iPhone & iPad (Safari) Instructions:</h5>
+          <ol class="pwa-steps">
+            <li>Tap the <strong>Share</strong> button <i data-lucide="share"></i> at the bottom of Safari.</li>
+            <li>Scroll down and tap <strong>Add to Home Screen</strong> <i data-lucide="plus-square"></i>.</li>
+            <li>Tap <strong>Add</strong> in the top right corner.</li>
+          </ol>
+        </div>
+
+        <div id="pwaAndroidBox" class="pwa-android-box">
+          <h5><i data-lucide="chrome"></i> Android (Chrome) Instructions:</h5>
+          <ol class="pwa-steps">
+            <li>Tap the <strong>3 dots menu</strong> <i data-lucide="more-vertical"></i> in the top right of Chrome.</li>
+            <li>Select <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closePwaModal()">Got it!</button>
+      </div>
     </div>
   </div>
 
