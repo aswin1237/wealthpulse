@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="WealthPulse">
+  <title>WealthPulse — Smart Expense Tracker & Wealth Planner</title>
+  <meta name="description" content="Track daily & monthly expenses, manage annual income, calculate savings, and get AI-powered financial advice with WealthPulse.">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation (Desktop) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <i data-lucide="wallet-cards"></i>
+        </div>
+        <div class="brand-text">
+          <h2>WealthPulse</h2>
+          <span class="badge-pro">SMART AGENT</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="expenses">
+          <i data-lucide="receipt"></i>
+          <span>Expenses Log</span>
+        </button>
+        <button class="nav-item" data-tab="income">
+          <i data-lucide="piggy-bank"></i>
+          <span>Income & Budget</span>
+        </button>
+        <button class="nav-item" data-tab="advisor">
+          <i data-lucide="sparkles"></i>
+          <span>AI Money Advisor</span>
+        </button>
+        <button class="nav-item" data-tab="calculators">
+          <i data-lucide="calculator"></i>
+          <span>Calculators</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="currency-selector-box">
+          <label for="currencySelect"><i data-lucide="coins"></i> Currency</label>
+          <select id="currencySelect">
+            <option value="$" selected>USD ($)</option>
+            <option value="₹">INR (₹)</option>
+            <option value="€">EUR (€)</option>
+            <option value="£">GBP (£)</option>
+            <option value="CAD $">CAD ($)</option>
+            <option value="AUD $">AUD ($)</option>
+            <option value="¥">JPY (¥)</option>
+          </select>
+        </div>
+        <div class="user-pill">
+          <div class="avatar"><i data-lucide="user"></i></div>
+          <div class="user-info">
+            <span class="user-name">My Wealth Space</span>
+            <span class="user-status"><span class="dot"></span> Online</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Mobile Top Bar Header -->
+      <header class="top-header">
+        <div class="mobile-header-row">
+          <div class="mobile-brand">
+            <div class="brand-icon-sm"><i data-lucide="wallet-cards"></i></div>
+            <h2>WealthPulse</h2>
+          </div>
+          <div class="mobile-header-actions">
+            <select id="currencySelectMobile" class="currency-select-mobile">
+              <option value="$" selected>$ USD</option>
+              <option value="₹">₹ INR</option>
+              <option value="€">€ EUR</option>
+              <option value="£">£ GBP</option>
+              <option value="CAD $">$ CAD</option>
+              <option value="AUD $">$ AUD</option>
+              <option value="¥">¥ JPY</option>
+            </select>
+            <button class="btn btn-secondary btn-icon-sm" id="btnExportDataMobile" title="Export CSV">
+              <i data-lucide="download"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="header-title">
+          <h1 id="pageTitle">Financial Dashboard</h1>
+          <p id="pageSubtitle">Overview of your daily, monthly expenses and annual wealth growth</p>
+        </div>
+        
+        <div class="header-actions desktop-only">
+          <button class="btn btn-secondary" id="btnExportData">
+            <i data-lucide="download"></i> Export Data
+          </button>
+          <button class="btn btn-primary" id="btnQuickAdd">
+            <i data-lucide="plus"></i> Add Expense
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD / SUMMARY VIEW -->
+      <section id="tab-dashboard" class="tab-content active">
+        
+        <!-- Health Banner -->
+        <div class="health-card">
+          <div class="health-info">
+            <div class="health-score-badge">
+              <span class="score-number" id="healthScoreValue">84</span>
+              <span class="score-label">Health Score</span>
+            </div>
+            <div class="health-details">
+              <h3 id="healthScoreTitle">Strong Financial Standing</h3>
+              <p id="healthScoreDesc">Your monthly savings rate is healthy. Keep building your emergency cushion and long-term investments.</p>
+              <div class="health-progress-bar">
+                <div class="health-progress-fill" id="healthScoreFill" style="width: 84%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="health-actions">
+            <button class="btn btn-glass" onclick="switchTab('advisor')">
+              <i data-lucide="bot"></i> Ask AI Advisor
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics Overview Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card card-income">
+            <div class="card-header">
+              <span>Annual Income</span>
+              <div class="icon-wrap"><i data-lucide="trending-up"></i></div>
+            </div>
+            <div class="metric-value" id="valAnnualIncome">$85,000</div>
+            <div class="metric-sub" id="subMonthlyNet">Net Monthly: $5,666</div>
+          </div>
+
+          <div class="metric-card card-spent-month">
+            <div class="card-header">
+              <span>Monthly Spent (This Month)</span>
+              <div class="icon-wrap"><i data-lucide="credit-card"></i></div>
+            </div>
+            <div class="metric-value" id="valMonthlySpent">$2,450</div>
+            <div class="metric-sub" id="subMonthlyBudget">Budgeted: $3,500 (70% used)</div>
+          </div>
+
+          <div class="metric-card card-spent-today">
+            <div class="card-header">
+              <span>Daily Expenses (Today)</span>
+              <div class="icon-wrap"><i data-lucide="calendar"></i></div>
+            </div>
+            <div class="metric-value" id="valDailySpent">$42.50</div>
+            <div class="metric-sub" id="subDailyAvg">Avg Daily Target: $75.00</div>
+          </div>
+
+          <div class="metric-card card-savings">
+            <div class="card-header">
+              <span>Monthly Net Savings</span>
+              <div class="icon-wrap"><i data-lucide="shield-check"></i></div>
+            </div>
+            <div class="metric-value" id="valMonthlySavings">$3,216</div>
+            <div class="metric-sub" id="valSavingsRate">Savings Rate: 56.7%</div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="card-title-row">
+              <h3><i data-lucide="pie-chart"></i> Expense Breakdown by Category</h3>
+              <span class="time-pill">This Month</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="categoryDonutChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-title-row">
+              <h3><i data-lucide="bar-chart-3"></i> Income vs Spending Trend</h3>
+              <span class="time-pill">Yearly Projection</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="incomeVsExpenseBarChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions & Quick Budget Rule -->
+        <div class="dashboard-bottom-grid">
+          <div class="glass-panel recent-expenses-panel">
+            <div class="panel-header">
+              <h3><i data-lucide="clock"></i> Recent Expenses</h3>
+              <button class="btn-link" onclick="switchTab('expenses')">View All</button>
+            </div>
+            <div class="recent-list" id="recentExpensesList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <div class="glass-panel budget-rule-panel">
+            <div class="panel-header">
+              <h3><i data-lucide="sliders"></i> 50/30/20 Budget Allocation</h3>
+              <span class="hint-tag">Standard Strategy</span>
+            </div>
+            <div class="budget-rule-body">
+              <div class="rule-item">
+                <div class="rule-labels">
+                  <span>Needs (Essential 50%)</span>
+                  <span id="needsRatioText">42% ($2,380)</span>
+                </div>
+                <div class="rule-bar-track">
+                  <div class="rule-bar-fill fill-needs" id="needsBar" style="width: 42%;"></div>
+                </div>
+              </div>
+
+              <div class="rule-item">
+                <div class="rule-labels">
+                  <span>Wants (Lifestyle 30%)</span>
+                  <span id="wantsRatioText">24% ($1,360)</span>
+                </div>
+                <div class="rule-bar-track">
+                  <div class="rule-bar-fill fill-wants" id="wantsBar" style="width: 24%;"></div>
+                </div>
+              </div>
+
+              <div class="rule-item">
+                <div class="rule-labels">
+                  <span>Savings & Investments (20%+)</span>
+                  <span id="savingsRatioText">34% ($1,926)</span>
+                </div>
+                <div class="rule-bar-track">
+                  <div class="rule-bar-fill fill-savings" id="savingsBar" style="width: 34%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: EXPENSES LOG -->
+      <section id="tab-expenses" class="tab-content">
+        <div class="glass-panel">
+          <div class="filter-toolbar">
+            <div class="search-box">
+              <i data-lucide="search"></i>
+              <input type="text" id="expenseSearch" placeholder="Search title or note...">
+            </div>
+
+            <div class="filter-group">
+              <select id="filterCategory">
+                <option value="ALL">All Categories</option>
+                <option value="Housing">Housing</option>
+                <option value="Food & Dining">Food & Dining</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Utilities & Bills">Utilities & Bills</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Debt & Loans">Debt & Loans</option>
+                <option value="Savings & Investment">Savings & Investment</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+              </select>
+
+              <select id="filterFrequency">
+                <option value="ALL">All Frequencies</option>
+                <option value="Daily">Daily / One-Time</option>
+                <option value="Monthly">Monthly Recurring</option>
+                <option value="Annual">Annual Recurring</option>
+              </select>
+
+              <button class="btn btn-primary desktop-only" onclick="openExpenseModal()">
+                <i data-lucide="plus"></i> Add New
+              </button>
+            </div>
+          </div>
+
+          <!-- Table for Tablet/Desktop, Cards for Mobile -->
+          <div class="table-responsive desktop-table-wrap">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Frequency</th>
+                  <th>Amount</th>
+                  <th>Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expensesTableBody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mobile-expenses-cards" id="mobileExpensesCards">
+            <!-- Rendered via JS for phones -->
+          </div>
+
+          <div id="emptyExpensesState" class="empty-state hidden">
+            <i data-lucide="inbox"></i>
+            <p>No expenses found matching your criteria.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: INCOME & BUDGET PLANNER -->
+      <section id="tab-income" class="tab-content">
+        <div class="grid-2col">
+          <div class="glass-panel">
+            <div class="panel-header">
+              <h3><i data-lucide="coins"></i> Annual & Monthly Income Settings</h3>
+            </div>
+            <form id="incomeForm" class="form-grid">
+              <div class="form-group">
+                <label for="inputGrossIncome">Gross Annual Income</label>
+                <div class="input-with-icon">
+                  <span class="currency-symbol">$</span>
+                  <input type="number" id="inputGrossIncome" min="0" step="500" value="85000" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputTaxRate">Estimated Tax & Deductions (%)</label>
+                <input type="number" id="inputTaxRate" min="0" max="80" step="0.5" value="20" required>
+              </div>
+
+              <div class="form-group">
+                <label for="inputSideIncome">Additional Monthly Side Income</label>
+                <div class="input-with-icon">
+                  <span class="currency-symbol">$</span>
+                  <input type="number" id="inputSideIncome" min="0" step="50" value="0">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputSavingsGoal">Target Monthly Savings Goal</label>
+                <div class="input-with-icon">
+                  <span class="currency-symbol">$</span>
+                  <input type="number" id="inputSavingsGoal" min="0" step="100" value="2000">
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-full-mobile">
+                  <i data-lucide="check"></i> Save Income Settings
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="glass-panel">
+            <div class="panel-header">
+              <h3><i data-lucide="calculator"></i> Income Breakdown Summary</h3>
+            </div>
+            <div class="income-summary-cards">
+              <div class="summary-box">
+                <span class="box-label">Annual Gross Income</span>
+                <span class="box-val text-primary" id="summaryGross">$85,000</span>
+              </div>
+              <div class="summary-box">
+                <span class="box-label">Est. Taxes (Annual)</span>
+                <span class="box-val text-danger" id="summaryTaxes">$17,000</span>
+              </div>
+              <div class="summary-box">
+                <span class="box-label">Net Annual Take-Home</span>
+                <span class="box-val text-success" id="summaryNetAnnual">$68,000</span>
+              </div>
+              <div class="summary-box">
+                <span class="box-label">Effective Net Monthly Pay</span>
+                <span class="box-val text-accent" id="summaryNetMonthly">$5,666.67</span>
+              </div>
+            </div>
+
+            <div class="budget-advice-box">
+              <h4><i data-lucide="lightbulb"></i> Allocation Guidance</h4>
+              <p id="incomeAdviceText">Based on your net monthly pay of $5,666.67, your target 50/30/20 budget breakdown is $2,833 for Essential Needs, $1,700 for Personal Wants, and $1,133 for Long-Term Savings.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: AI MONEY ADVISOR & SUGGESTIONS -->
+      <section id="tab-advisor" class="tab-content">
+        <div class="grid-advisor">
+          
+          <!-- Left Column: Automated Smart Suggestions -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <h3><i data-lucide="sparkles"></i> Automated Smart Recommendations</h3>
+              <span class="hint-tag">Real-Time Insights</span>
+            </div>
+            <div class="suggestions-list" id="suggestionsContainer">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Financial Coach Chatbot -->
+          <div class="glass-panel chat-panel">
+            <div class="panel-header">
+              <div class="chat-header-user">
+                <div class="bot-avatar"><i data-lucide="bot"></i></div>
+                <div>
+                  <h3>Wealthy AI Advisor</h3>
+                  <span class="status-text"><span class="dot"></span> Online & Analyzing Your Profile</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+              <div class="chat-msg msg-bot">
+                <div class="msg-content">
+                  Hello! I'm your personalized Wealthy AI Advisor. I have analyzed your current monthly income and expenses log. 
+                  <br><br>
+                  How can I help you improve your money management today? Tap a topic below or ask any question!
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-quick-prompts">
+              <button class="prompt-chip" onclick="sendQuickPrompt('How can I reduce my monthly expenses?')">💡 Cut Expenses</button>
+              <button class="prompt-chip" onclick="sendQuickPrompt('Am I saving enough for an emergency fund?')">🛡️ Emergency Fund Check</button>
+              <button class="prompt-chip" onclick="sendQuickPrompt('How should I invest my surplus savings?')">📈 Investment Advice</button>
+              <button class="prompt-chip" onclick="sendQuickPrompt('Evaluate my 50/30/20 budget split')">⚖️ Budget Audit</button>
+            </div>
+
+            <form id="chatForm" class="chat-input-bar">
+              <input type="text" id="chatInput" placeholder="Ask Wealthy AI anything..." required>
+              <button type="submit" class="btn btn-primary btn-icon">
+                <i data-lucide="send"></i>
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 5: FINANCIAL CALCULATORS -->
+      <section id="tab-calculators" class="tab-content">
+        <div class="calc-tabs-scroll">
+          <div class="calc-tabs">
+            <button class="calc-tab-btn active" data-calc="compound">Compound Growth</button>
+            <button class="calc-tab-btn" data-calc="split">Split Bill & Tip</button>
+            <button class="calc-tab-btn" data-calc="emergency">Emergency Reserve</button>
+            <button class="calc-tab-btn" data-calc="debt">Loan EMI</button>
+          </div>
+        </div>
+
+        <!-- Calc 1: Compound Interest -->
+        <div id="calc-compound" class="calc-pane active glass-panel">
+          <h3><i data-lucide="line-chart"></i> Compound Wealth Growth Estimator</h3>
+          <p class="calc-desc">Calculate how your monthly savings compound over time through investing.</p>
+          <div class="grid-2col">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Initial Investment</label>
+                <input type="number" id="ciInitial" value="5000" min="0">
+              </div>
+              <div class="form-group">
+                <label>Monthly Contribution</label>
+                <input type="number" id="ciMonthly" value="500" min="0">
+              </div>
+              <div class="form-group">
+                <label>Expected Annual Return (%)</label>
+                <input type="number" id="ciRate" value="8" step="0.1" min="0">
+              </div>
+              <div class="form-group">
+                <label>Investment Horizon (Years)</label>
+                <input type="number" id="ciYears" value="10" min="1" max="50">
+              </div>
+              <button class="btn btn-primary btn-full-mobile" onclick="calculateCompound()">Calculate Growth</button>
+            </div>
+            <div class="calc-result-box">
+              <div class="res-highlight">
+                <span>Future Portfolio Value</span>
+                <h2 id="resCompoundTotal" class="text-success">$103,428</h2>
+              </div>
+              <div class="res-breakdown">
+                <div><span>Total Principal Deposited:</span> <strong id="resCompoundDeposits">$65,000</strong></div>
+                <div><span>Total Interest Earned:</span> <strong id="resCompoundInterest" class="text-primary">$38,428</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calc 2: Split Bill -->
+        <div id="calc-split" class="calc-pane glass-panel">
+          <h3><i data-lucide="users"></i> Split Bill & Tip Calculator</h3>
+          <p class="calc-desc">Quickly divide dinner bills, outings, or shared living costs with friends.</p>
+          <div class="grid-2col">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Total Bill Amount</label>
+                <input type="number" id="sbBill" value="120" min="0">
+              </div>
+              <div class="form-group">
+                <label>Tip Percentage (%)</label>
+                <input type="number" id="sbTip" value="15" min="0">
+              </div>
+              <div class="form-group">
+                <label>Number of People</label>
+                <input type="number" id="sbPeople" value="4" min="1">
+              </div>
+              <button class="btn btn-primary btn-full-mobile" onclick="calculateSplitBill()">Calculate Split</button>
+            </div>
+            <div class="calc-result-box">
+              <div class="res-highlight">
+                <span>Amount Per Person</span>
+                <h2 id="resSplitPerPerson" class="text-accent">$34.50</h2>
+              </div>
+              <div class="res-breakdown">
+                <div><span>Total Tip Amount:</span> <strong id="resSplitTip">$18.00</strong></div>
+                <div><span>Total Final Bill:</span> <strong id="resSplitTotal">$138.00</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calc 3: Emergency Fund -->
+        <div id="calc-emergency" class="calc-pane glass-panel">
+          <h3><i data-lucide="shield"></i> Emergency Reserve Target Calculator</h3>
+          <p class="calc-desc">Calculate your financial safety net based on essential monthly expenses.</p>
+          <div class="grid-2col">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Essential Monthly Expenses</label>
+                <input type="number" id="efMonthlyExp" value="2450" min="0">
+              </div>
+              <div class="form-group">
+                <label>Target Cushion (Months)</label>
+                <select id="efMonths">
+                  <option value="3">3 Months (Standard)</option>
+                  <option value="6" selected>6 Months (Recommended)</option>
+                  <option value="12">12 Months (Conservative)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Current Emergency Savings</label>
+                <input type="number" id="efCurrent" value="6000" min="0">
+              </div>
+              <button class="btn btn-primary btn-full-mobile" onclick="calculateEmergencyFund()">Calculate Reserve</button>
+            </div>
+            <div class="calc-result-box">
+              <div class="res-highlight">
+                <span>Target Emergency Goal</span>
+                <h2 id="resEfGoal" class="text-primary">$14,700</h2>
+              </div>
+              <div class="res-breakdown">
+                <div><span>Remaining to Save:</span> <strong id="resEfShortfall" class="text-warning">$8,700</strong></div>
+                <div><span>Fund Progress:</span> <strong id="resEfProgress">40.8% Funded</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calc 4: Loan EMI -->
+        <div id="calc-debt" class="calc-pane glass-panel">
+          <h3><i data-lucide="landmark"></i> Loan & Debt EMI Calculator</h3>
+          <p class="calc-desc">Estimate monthly payments and total interest for mortgages, car loans, or debt.</p>
+          <div class="grid-2col">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Loan Principal Amount</label>
+                <input type="number" id="emiPrincipal" value="25000" min="0">
+              </div>
+              <div class="form-group">
+                <label>Annual Interest Rate (%)</label>
+                <input type="number" id="emiRate" value="6.5" step="0.1" min="0">
+              </div>
+              <div class="form-group">
+                <label>Loan Duration (Years)</label>
+                <input type="number" id="emiTenure" value="5" min="1" max="30">
+              </div>
+              <button class="btn btn-primary btn-full-mobile" onclick="calculateEMI()">Calculate EMI</button>
+            </div>
+            <div class="calc-result-box">
+              <div class="res-highlight">
+                <span>Monthly EMI Payment</span>
+                <h2 id="resEmiMonthly" class="text-danger">$489.15</h2>
+              </div>
+              <div class="res-breakdown">
+                <div><span>Total Interest Payable:</span> <strong id="resEmiInterest">$4,349.00</strong></div>
+                <div><span>Total Payment (Principal + Int):</span> <strong id="resEmiTotal">$29,349.00</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION BAR -->
+    <nav class="mobile-bottom-nav">
+      <button class="mob-nav-item active" data-tab="dashboard">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Home</span>
+      </button>
+      <button class="mob-nav-item" data-tab="expenses">
+        <i data-lucide="receipt"></i>
+        <span>Expenses</span>
+      </button>
+      <button class="mob-nav-item mob-fab-item" onclick="openExpenseModal()" title="Add Expense">
+        <div class="mob-fab">
+          <i data-lucide="plus"></i>
+        </div>
+      </button>
+      <button class="mob-nav-item" data-tab="income">
+        <i data-lucide="piggy-bank"></i>
+        <span>Income</span>
+      </button>
+      <button class="mob-nav-item" data-tab="advisor">
+        <i data-lucide="sparkles"></i>
+        <span>AI Coach</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ADD / EDIT EXPENSE MODAL -->
+  <div id="expenseModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <div class="modal-drag-handle"></div>
+      <div class="modal-header">
+        <h3 id="modalTitle"><i data-lucide="plus-circle"></i> Add New Expense</h3>
+        <button class="btn-close" onclick="closeExpenseModal()">&times;</button>
+      </div>
+      <form id="expenseForm">
+        <input type="hidden" id="modalExpenseId">
+        <div class="form-group">
+          <label for="modalExpenseTitle">Title / Description</label>
+          <input type="text" id="modalExpenseTitle" placeholder="e.g. Grocery Shopping, Rent, Netflix" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="modalExpenseAmount">Amount</label>
+            <div class="input-with-icon">
+              <span class="currency-symbol">$</span>
+              <input type="number" id="modalExpenseAmount" step="0.01" min="0.01" placeholder="0.00" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modalExpenseCategory">Category</label>
+            <select id="modalExpenseCategory" required>
+              <option value="Housing">Housing (Rent/Mortgage)</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Utilities & Bills">Utilities & Bills</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Debt & Loans">Debt & Loans</option>
+              <option value="Savings & Investment">Savings & Investment</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="modalExpenseFrequency">Frequency</label>
+            <select id="modalExpenseFrequency" required>
+              <option value="Daily">Daily / One-Time</option>
+              <option value="Monthly" selected>Monthly Recurring</option>
+              <option value="Annual">Annual Recurring</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="modalExpenseDate">Date</label>
+            <input type="date" id="modalExpenseDate" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="modalExpenseNotes">Notes (Optional)</label>
+          <input type="text" id="modalExpenseNotes" placeholder="Additional details...">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeExpenseModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Expense</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('PWA Service Worker registered:', reg.scope))
+          .catch(err => console.log('SW Registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
